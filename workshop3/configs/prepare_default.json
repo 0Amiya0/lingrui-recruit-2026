@@ -1,0 +1,16 @@
+{
+  "dataset": "cifar10",
+  "n_way": 10,
+  "k_shot": 10,
+  "noise_rate": 0.4,
+  "noise_type": "symmetric",
+  "seed": 0,
+  "backbone": "resnet18",
+  "pretrained": true,
+  "image_size": 224,
+  "normalize": true,
+  "batch_size": 256,
+  "device": "auto",
+  "data_dir": "data",
+  "out_dir": "results"
+}

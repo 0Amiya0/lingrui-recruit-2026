@@ -1,0 +1,11 @@
+PWD c:/Users/NiZhe/Desktop/studioRecruit/Lingrui/workshop3/paper
+INPUT c:/texlive/2026/texmf.cnf
+INPUT c:/texlive/2026/texmf-dist/web2c/texmf.cnf
+INPUT c:/texlive/2026/texmf-var/web2c/pdftex/pdflatex.fmt
+INPUT c:/Users/NiZhe/Desktop/studioRecruit/Lingrui/workshop3/paper/short_paper.tex
+OUTPUT short_paper.log
+INPUT c:/texlive/2026/texmf-dist/tex/latex/base/article.cls
+INPUT c:/texlive/2026/texmf-dist/tex/latex/base/article.cls
+INPUT c:/texlive/2026/texmf-dist/tex/latex/base/size10.clo
+INPUT c:/texlive/2026/texmf-dist/tex/latex/base/size10.clo
+INPUT c:/texlive/2026/texmf-dist/tex/latex/base/size10.clo
