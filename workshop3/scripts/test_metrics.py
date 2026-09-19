@@ -14,7 +14,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import numpy as np
 
 from src.metrics import (accuracy, macro_f1, expected_calibration_error,
-                         noise_detection_metrics, softmax)
+                         noise_detection_metrics, noise_detection_auroc,
+                         risk_coverage_curve, softmax)
 
 
 def check(name, got, expected, tol=1e-4):
@@ -57,6 +58,16 @@ def main():
     check("noise precision", m["precision"], 2 / 3, tol=1e-3)
     check("noise recall", m["recall"], 2 / 3, tol=1e-3)
     check("noise f1", m["f1"], 2 / 3, tol=1e-3)
+
+    # 噪声识别 AUROC：噪声样本分数高 -> 完美可分的 AUC=1
+    check("noise auroc perfect", noise_detection_auroc(
+        [0.9, 0.8, 0.7, 0.1, 0.2], [1, 1, 1, 0, 0]), 1.0)
+
+    # 风险-覆盖：全对 -> risk 恒为 0，AURC=0
+    probs3 = np.array([[0.9, 0.1]] * 5 + [[0.1, 0.9]] * 5)
+    labels3 = np.array([0] * 5 + [1] * 5)
+    _, _, aurc = risk_coverage_curve(probs3, labels3)
+    check("risk-coverage perfect", aurc, 0.0)
 
     print("\nALL METRICS SANITY CHECKS PASSED")
 

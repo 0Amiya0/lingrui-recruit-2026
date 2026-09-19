@@ -1,8 +1,8 @@
-"""评估指标：Accuracy / Macro-F1 / ECE / 噪声识别准确率。"""
+"""评估指标：Accuracy / Macro-F1 / ECE / 噪声识别准确率 / AUROC / 风险-覆盖。"""
 import numpy as np
 import torch
 import torch.nn.functional as F
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 
 
 def softmax(logits, axis=-1):
@@ -75,3 +75,38 @@ def noise_detection_metrics(pred_noise_mask, true_noise_mask):
     recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
     f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
     return {"precision": float(precision), "recall": float(recall), "f1": float(f1)}
+
+
+def noise_detection_auroc(score, true_noise_mask):
+    """噪声识别 AUROC：score 越大越可能是噪声（与 true_noise_mask 对齐）。
+
+    全噪声/全干净时 AUC 无定义，返回 NaN。
+    """
+    score = np.asarray(score, dtype=np.float64)
+    true = np.asarray(true_noise_mask, dtype=bool)
+    if true.all() or not true.any():
+        return float("nan")
+    return float(roc_auc_score(true.astype(int), score))
+
+
+def risk_coverage_curve(probs, y_true, n_points=20):
+    """选择性预测：按预测置信度降序，返回 (coverage, risk, AURC)。
+
+    coverage：保留的高置信度样本比例；risk = 1 - accuracy（在保留样本上）。
+    AURC：风险-覆盖曲线下面积，越低越好（完美模型为 0）。
+    """
+    probs = np.asarray(probs, dtype=np.float64)
+    y_true = np.asarray(y_true)
+    conf = probs.max(1)
+    correct = (probs.argmax(1) == y_true).astype(np.float64)
+    order = np.argsort(-conf)                 # 高置信度在前
+    correct_sorted = correct[order]
+    coverages = np.linspace(0.05, 1.0, n_points)
+    risks = []
+    for c in coverages:
+        k = max(1, int(round(c * len(correct_sorted))))
+        risks.append(float(1.0 - correct_sorted[:k].mean()))
+    risks = np.asarray(risks)
+    _trapz = getattr(np, "trapezoid", None) or np.trapz   # numpy>=2.0 用 trapezoid
+    aurc = float(_trapz(risks, coverages))
+    return coverages.tolist(), risks.tolist(), aurc

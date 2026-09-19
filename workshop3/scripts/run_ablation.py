@@ -36,7 +36,7 @@ def load_data(cfg: Config):
 def run_one(cfg, support_feats, support_noisy, noise_mask, test_feats, test_labels,
             device, sel_beta, gce_q, sel_iters, top_tau, label):
     feat_dim = support_feats.shape[1]
-    pred_noise, keep = distance_based_selection(
+    pred_noise, keep, _ = distance_based_selection(
         support_feats, support_noisy, cfg.n_way,
         n_iters=sel_iters, beta=sel_beta, top_tau=top_tau)
     nd = noise_detection_metrics(pred_noise, noise_mask)

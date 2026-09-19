@@ -23,6 +23,7 @@ from sklearn.manifold import TSNE
 from src.config import Config
 from src.utils import seed_everything, get_device, save_json
 from src.method import distance_based_selection, train_linear_head, head_proba
+from src.metrics import noise_detection_auroc, risk_coverage_curve
 
 CIFAR10_CLASSES = ["airplane", "automobile", "bird", "cat", "deer",
                    "dog", "frog", "horse", "ship", "truck"]
@@ -48,7 +49,7 @@ def main():
     figs_dir.mkdir(parents=True, exist_ok=True)
 
     # ---- full 方法 ----
-    pred_noise, keep = distance_based_selection(
+    pred_noise, keep, dist = distance_based_selection(
         support_feats, support_noisy, cfg.n_way, n_iters=cfg.sel_iters, beta=cfg.sel_beta)
     head = train_linear_head(support_feats[keep], support_noisy[keep], feat_dim, cfg.n_way,
                              loss_name=cfg.loss, loss_kw={"q": cfg.gce_q}, device=str(device), seed=cfg.seed)
@@ -92,6 +93,7 @@ def main():
         "n_flagged": int(pred_noise.sum()),
         "missed_noisy": int(fn_mask.sum()),
         "false_flagged_clean": int(fp_mask.sum()),
+        "auroc": noise_detection_auroc(dist, noise_mask),
         "missed_noisy_indices": np.where(fn_mask)[0].tolist(),
         "false_flagged_indices": np.where(fp_mask)[0].tolist(),
     }
@@ -147,7 +149,21 @@ def main():
     fig.savefig(figs_dir / "distance_distribution.png", dpi=150)
     plt.close(fig)
 
-    # ---- 5) t-SNE（support 全部 + test 子集），标出噪声/筛除样本 ----
+    # ---- 5) 选择性预测：risk-coverage 曲线 ----
+    coverages, risks, aurc = risk_coverage_curve(probs, test_labels)
+    report["selective_prediction"] = {"coverage": coverages, "risk": risks, "aurc": aurc}
+
+    fig, ax = plt.subplots(figsize=(5, 4))
+    ax.plot(coverages, risks, marker="o", color="#1f77b4")
+    ax.set_xlabel("coverage (fraction retained)")
+    ax.set_ylabel("risk (1 - accuracy)")
+    ax.set_title(f"Selective prediction risk-coverage (AURC={aurc:.3f})")
+    ax.grid(True, alpha=0.3)
+    fig.tight_layout()
+    fig.savefig(figs_dir / "risk_coverage.png", dpi=150)
+    plt.close(fig)
+
+    # ---- 6) t-SNE（support 全部 + test 子集），标出噪声/筛除样本 ----
     rng = np.random.RandomState(cfg.seed)
     test_sub = rng.choice(len(test_feats), 300, replace=False)
     all_feats = np.concatenate([support_feats, test_feats[test_sub]], axis=0)

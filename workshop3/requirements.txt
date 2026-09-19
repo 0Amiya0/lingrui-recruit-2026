@@ -1,5 +1,7 @@
-# PyTorch 请先按 README 用 CPU 源安装，再装其余依赖：
-#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+# PyTorch 请先按 README 装对应设备版本，再装其余依赖：
+#   GPU(CUDA 12.x): pip install torch torchvision --index-url https://download.pytorch.org/whl/cu124
+#   GPU(CUDA 11.x): pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+#   CPU:            pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 numpy>=2.0
 scikit-learn>=1.5
 matplotlib>=3.8

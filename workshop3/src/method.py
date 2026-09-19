@@ -32,7 +32,8 @@ def sce_loss(logits, targets, alpha=1.0, beta=0.1, eps=1e-4):
 
 def get_loss(loss_name, **kw):
     if loss_name == "ce":
-        return lambda logits, targets: F.cross_entropy(logits, targets)
+        return lambda logits, targets: F.cross_entropy(
+            logits, targets, label_smoothing=kw.get("label_smoothing", 0.0))
     if loss_name == "gce":
         return lambda logits, targets: gce_loss(logits, targets, q=kw.get("q", 0.7))
     if loss_name == "sce":
@@ -45,12 +46,14 @@ def get_loss(loss_name, **kw):
 def distance_based_selection(support_feats, support_labels, n_way, n_iters=5, beta=1.0, top_tau=None):
     """迭代 trimmed-mean 原型，把「大距离」样本判为噪声。
 
-    返回 (pred_noise_mask, keep_mask)：pred_noise_mask=True 表示被判为噪声。
+    返回 (pred_noise_mask, keep_mask, dist_scores)：pred_noise_mask=True 表示被判为噪声；
+    dist_scores 为最终每个样本到其标注类原型的余弦距离（越大越可能是噪声，用于 AUROC）。
     """
     feats = np.asarray(support_feats, dtype=np.float32)
     labels = np.asarray(support_labels)
     n = len(feats)
     keep = np.ones(n, dtype=bool)
+    d = np.zeros(n, dtype=np.float32)   # 到标注类原型的余弦距离（噪声似然分数）
     proto = np.zeros((n_way, feats.shape[1]), dtype=np.float32)
 
     for _ in range(n_iters):
@@ -74,19 +77,21 @@ def distance_based_selection(support_feats, support_labels, n_way, n_iters=5, be
             keep = new_keep
         else:
             break
-    return ~keep, keep
+    return ~keep, keep, d
 
 
 # ---------- 线性分类头训练 ----------
 def train_linear_head(feats, labels, feat_dim, n_way, loss_name="ce", loss_kw=None,
-                      lr=0.1, epochs=200, device="cpu", seed=0):
+                      lr=0.1, epochs=200, device="cpu", seed=0,
+                      weight_decay=1e-4, label_smoothing=0.1):
     loss_kw = loss_kw or {}
+    loss_kw.setdefault("label_smoothing", label_smoothing)
     torch.manual_seed(seed)
     loss_fn = get_loss(loss_name, **loss_kw)
     X = torch.as_tensor(feats, dtype=torch.float32).to(device)
     y = torch.as_tensor(labels, dtype=torch.long).to(device)
     head = nn.Linear(feat_dim, n_way).to(device)
-    opt = torch.optim.Adam(head.parameters(), lr=lr)
+    opt = torch.optim.Adam(head.parameters(), lr=lr, weight_decay=weight_decay)
     head.train()
     for _ in range(epochs):
         opt.zero_grad()

@@ -1,6 +1,7 @@
 """Step 4：画主实验结果图（Acc / Macro-F1 / ECE vs 噪声率）+ 噪声识别曲线。
 
-读取 results/baseline_summary.csv 与 results/method_summary.csv，输出 PNG 到 results/figs/。
+优先读 results/summary_meanstd.csv（多种子 mean±std，由 aggregate_seeds.py 产出），
+画均值并带 ±std 误差棒；若无则回退到单种子原始 CSV。
 用法：python scripts/plot_results.py
 """
 import csv
@@ -41,22 +42,24 @@ def read_csv(path):
 
 
 def series(data, method, field):
-    """按噪声率升序返回 (rates, values)，缺失则跳过。"""
-    rates, vals = [], []
+    """按噪声率升序返回 (rates, mean_vals, std_vals)，缺失则跳过。"""
+    rates, vals, errs = [], [], []
     for rate in sorted({k[1] for k in data if k[0] == method}):
         r = data.get((method, rate))
         if r is None or r.get(field) in ("", None):
             continue
         rates.append(rate)
         vals.append(float(r[field]))
-    return rates, vals
+        std = r.get(field + "_std")
+        errs.append(float(std) if std not in ("", None) else 0.0)
+    return rates, vals, errs
 
 
 def plot_metric(ax, data, field, ylabel, title):
     for m in METHODS:
-        rates, vals = series(data, m, field)
+        rates, vals, errs = series(data, m, field)
         if vals:
-            ax.plot(rates, vals, label=m, **STYLE[m])
+            ax.errorbar(rates, vals, yerr=errs, label=m, capsize=3, **STYLE[m])
     ax.set_xlabel("label noise rate")
     ax.set_ylabel(ylabel)
     ax.set_title(title)
@@ -65,9 +68,11 @@ def plot_metric(ax, data, field, ylabel, title):
 
 
 def main():
-    baseline = read_csv("results/baseline_summary.csv")
-    method = read_csv("results/method_summary.csv")
-    data = {**baseline, **method}
+    # 优先用多种子 mean±std；缺失则回退单种子原始 CSV
+    data = read_csv("results/summary_meanstd.csv")
+    if not data:
+        data = {**read_csv("results/baseline_summary.csv"),
+                **read_csv("results/method_summary.csv")}
     if not data:
         print("[警告] 未找到结果 CSV，请先跑 run_all.ps1 生成。")
         return
@@ -82,10 +87,10 @@ def main():
 
     # 噪声识别指标（仅 selection 类方法有）
     ax = axes[1, 1]
-    for field in ("noise_precision", "noise_recall", "noise_f1"):
-        rates, vals = series(method, "full", field)
+    for field in ("noise_precision", "noise_recall", "noise_f1", "noise_auroc"):
+        rates, vals, errs = series(data, "full", field)
         if vals:
-            ax.plot(rates, vals, marker="o", label=field)
+            ax.errorbar(rates, vals, yerr=errs, marker="o", capsize=3, label=field)
     ax.set_xlabel("label noise rate")
     ax.set_ylabel("noise detection score")
     ax.set_title("Noise detection (full method)")

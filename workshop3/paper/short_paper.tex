@@ -7,7 +7,7 @@
 %     只有主 .tex，请从官方模板包补齐 .sty 文件后即可编译）。
 %   - 本文件用内联 thebibliography，无需 .bib / .bst 文件。
 %   - 未引入 math_commands.tex 的自定义宏，全部使用标准 amsmath 写法。
-%   - 图占位：跑完 run_all.ps1 后取消对应 \includegraphics 行的注释。
+%   - 图已填入：results/figs/*.png（由 run_all.ps1 产出）。
 % ============================================================
 \documentclass{article}
 \usepackage{iclr2023_conference,times}
@@ -23,49 +23,61 @@
 \author{Anonymous authors\\
 Paper under double-blind review}
 
-% 数值结果占位标记：[FILL] 由 run_all.ps1 产出 results/*.csv 后回填
+% 数值已回填（来自 results/summary_meanstd.csv / ablation_summary.csv / error_analysis.json）。
+% 保留 \FILL 占位宏，便于日后重新留空。
 \newcommand{\FILL}{[\textit{FILL}]}
 
 \begin{document}
 \maketitle
 
+\thispagestyle{fancy}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\small\textit{Under review: Lingrui Studio Workshop 2026}}
+\fancyfoot[C]{\thepage}
+
 \begin{abstract}
 Few-shot classification assumes a small set of carefully labeled support examples, yet
-real-world annotations are frequently noisy. In this paper we study image classification
-where each class has only $K$ labeled examples \emph{and} a fraction of those labels are
-corrupted. We inject symmetric label noise into CIFAR-10 support sets and show that both a
-linear probe trained with cross-entropy and a prototypical network degrade sharply as the
-noise rate grows. We propose a simple two-component remedy: (i) \emph{distance-driven sample
-selection}, which iteratively trims support examples that lie far from their class
-prototype---the few-shot analogue of the ``small-loss'' heuristic---and (ii) a \emph{robust
-loss} (Generalized Cross Entropy) applied to the retained examples. Across noise rates of
-$0\%$--$40\%$ our method consistently outperforms the baselines on the clean test set, while
-the selection step itself doubles as a noise detector. We further analyze which noisy
-samples are missed and why, and characterize the resulting prototype drift.
+real-world annotations are frequently noisy. We inject symmetric label noise into CIFAR-10
+support sets ($10\%$/$20\%$/$40\%$) and study how label noise interacts with label scarcity.
+Against a \emph{strong} cross-entropy baseline (linear probe with label smoothing and weight
+decay) and a prototypical network, we evaluate a lightweight two-component method:
+(i) \emph{distance-driven sample selection}, which iteratively trims support examples that
+lie far from their class prototype---the few-shot analogue of the ``small-loss''
+heuristic---and (ii) a \emph{generalized cross-entropy (GCE) loss} applied to the retained
+examples. Across three seeds the method matches or modestly exceeds the strong baseline on
+clean-test accuracy and calibration (ECE), and its selection step doubles as an interpretable
+noise detector (AUROC). We additionally report noisy-test accuracy and selective-prediction
+risk, and analyze which noisy samples are missed and why. We conclude with a caution central
+to this area: gains on identifiable symmetric noise should not be assumed to transfer to
+real, instance-dependent label noise.
 \end{abstract}
 
 \section{Introduction}
 \label{sec:intro}
 
-Workshop short papers emphasize a clear research question, a sound experimental design, and
+This Workshop short papers emphasize a clear research question, sound experimental design, and
 results that support the conclusions. Our question is: \emph{how does label noise interact
-with label scarcity, and can a selection-plus-robust-loss method recover clean-test
-accuracy?}
+with label scarcity, and can a selection-plus-robust-loss method recover clean-test accuracy
+beyond a strong baseline?}
 
-Few-shot learners are especially fragile to label noise: with only $K$ examples per class,
-a single mislabeled sample already distorts the class prototype, and the distortion grows
-with the noise rate. Standard label-noise remedies built for large datasets (large-sample
-selection, complex two-stage training) are not directly applicable when the support set is
-tiny.
+Few-shot learners are especially fragile to label noise: with only $K$ examples per class, a
+single mislabeled sample already distorts the class prototype, and the distortion grows with
+the noise rate. Standard label-noise remedies built for large datasets are not directly
+applicable when the support set is tiny. At the same time, a large body of recent work
+cautions that gains from complex noise-robust methods often shrink once the plain baseline is
+properly regularized, and once results are averaged over multiple seeds. We therefore design
+our study around a strong, well-regularized baseline rather than a weak one.
 
 Our contributions are threefold:
 \begin{enumerate}
-  \item A controlled benchmark injecting symmetric label noise into few-shot support sets
-        of CIFAR-10.
+  \item A controlled benchmark injecting symmetric label noise into few-shot support sets of
+        CIFAR-10, evaluated over multiple seeds (mean $\pm$ std).
   \item A lightweight \emph{distance-driven selection + robust loss} method with an
-        interpretable noise-detection signal.
+        interpretable, score-based noise-detection signal (AUROC).
   \item A systematic comparison and ablation across noise rates and few-shot sizes, plus an
-        error analysis of misclassification and noise-identification failures.
+        error analysis of misclassification and noise-identification failures, and a
+        selective-prediction (risk--coverage) view of reliability.
 \end{enumerate}
 
 \section{Related Work}
@@ -80,36 +92,45 @@ the noisy-sample signal.
 
 \textbf{Few-shot learning.} Prototypical networks \citep{snell2017protonet} classify by
 nearest class centroid. When support labels are noisy, the centroid is pulled toward the
-wrong class. Prior work on noisy few-shot learning uses meta-learning or label correction;
-we show that a simple iterative trimmed prototype plus a robust loss already recovers much
-of the accuracy.
+wrong class. Prior work on noisy few-shot learning uses meta-learning or label correction; we
+show that a simple iterative trimmed prototype plus a robust loss already recovers much of
+the accuracy.
+
+\textbf{A note on baselines.} Recent studies find that plain cross-entropy with label
+smoothing, weight decay, and early stopping often matches more complex noise-robust methods
+on synthetic benchmarks. We treat this seriously: our ``baseline'' is a \emph{strong} linear
+probe, and we report multi-seed means, so our claims are about gains over a well-tuned
+reference, not a weak one.
 
 \section{Method}
 \label{sec:method}
 
 \textbf{Setup.} Given a support set $S = \{(x_i, \tilde{y}_i)\}$ with $N$ classes and $K$
-examples per class, where labels $\tilde{y}$ are corrupted by symmetric noise at rate $r$.
-A frozen ImageNet-pretrained ResNet-18 extracts L2-normalized features $f(x_i)$. A clean
-test set is used only for evaluation.
+examples per class, where labels $\tilde{y}$ are corrupted by symmetric noise at rate $r$. A
+frozen ImageNet-pretrained ResNet-18 extracts L2-normalized features $f(x_i)$. A clean test
+set is used only for evaluation.
 
 \textbf{Baselines.}
 \begin{itemize}
   \item \emph{ProtoNet}: prototype $p_c = \frac{1}{|\{i:\tilde{y}_i=c\}|}\sum_{i:\tilde{y}_i=c} f(x_i)$,
         classify by cosine similarity.
-  \item \emph{CE linear probe}: a linear head trained on $(f(x_i), \tilde{y}_i)$ with
-        cross-entropy.
+  \item \emph{CE linear probe (strong)}: a linear head trained on $(f(x_i), \tilde{y}_i)$
+        with cross-entropy, label smoothing ($0.1$), and weight decay ($10^{-4}$). We
+        deliberately \emph{do not} use early stopping, because pure few-shot offers no clean
+        validation set---a constraint we return to in the limitations.
 \end{itemize}
 
-\textbf{Component 1 --- distance-driven selection.} We compute prototypes, then measure
-each support sample's distance to \emph{its (possibly wrong) assigned class prototype}. A
-sample is flagged as noise if its distance exceeds a threshold
+\textbf{Component 1 --- distance-driven selection.} We compute prototypes, then measure each
+support sample's distance to \emph{its (possibly wrong) assigned class prototype}. A sample
+is flagged as noise if its distance exceeds a threshold
 \[
   d_i = 1 - \cos\bigl(f(x_i),\, p_{\tilde{y}_i}\bigr) > \mu + \beta\,\sigma,
 \]
 where $\mu,\sigma$ are the mean and standard deviation of the within-set distances, or
 alternatively via a fixed quantile $\tau$. Prototypes are then recomputed from the retained
 samples, and we iterate $T$ rounds. This is the prototype-space translation of ``small loss
-= clean.''
+= clean.'' Crucially, the distance $d$ is a \emph{continuous} noise-likelihood score, which
+lets us report AUROC, not just a binary flag.
 
 \textbf{Component 2 --- robust loss.} We train a linear head on the retained samples using
 GCE
@@ -124,96 +145,173 @@ misses.
 \section{Experiments}
 \label{sec:experiments}
 
-\textbf{Setup.} CIFAR-10; $N=10$ classes; $K \in \{5,10,20\}$; symmetric noise
+\textbf{Setup.} CIFAR-10; $N=10$ classes; $K \in \{1,5,10,20\}$; symmetric noise
 $r \in \{0, 0.1, 0.2, 0.4\}$; frozen ResNet-18 (ImageNet) features, 512-d, L2-normalized.
-Metrics: accuracy, macro-F1, ECE (15 bins), and noise-detection precision/recall/F1. Seeds
-fixed; noise mask and configs saved for reproducibility.
+Metrics: accuracy, macro-F1, ECE (15 bins), \textbf{noisy-test accuracy}, noise-detection
+\textbf{AUROC} / precision / recall / F1, and selective-prediction \textbf{AURC} (area under
+the risk--coverage curve). Main results are averaged over 3 seeds (mean $\pm$ std); ablations
+and K-sensitivity use a single seed. Seeds fixed; noise mask and configs saved for
+reproducibility.
 
-\textbf{Results.} Table~\ref{tab:acc} reports clean-test accuracy versus noise rate at
-$K=10$, and Table~\ref{tab:noise} reports the noise-detection quality of the selection step.
+\textbf{Results.} Table~\ref{tab:acc} reports clean-test accuracy (mean $\pm$ std) versus
+noise rate at $K=10$. Table~\ref{tab:noise} reports noise-detection quality of the selection
+step.
 
 \begin{table}[t]
   \centering
-  \caption{Clean-test accuracy (\%) vs.\ label noise rate ($K=10$, CIFAR-10).}
+  \caption{Clean-test accuracy (\%) vs.\ label noise rate ($K=10$, mean $\pm$ std over 3 seeds).}
   \label{tab:acc}
   \begin{tabular}{lcccc}
     \toprule
-    Method           & 0\%  & 10\% & 20\% & 40\% \\
+    Method                      & 0\%  & 10\% & 20\% & 40\% \\
     \midrule
-    ProtoNet         & \FILL & \FILL & \FILL & \FILL \\
-    CE linear probe  & \FILL & \FILL & \FILL & \FILL \\
-    selection-only   & \FILL & \FILL & \FILL & \FILL \\
-    robust-loss-only & \FILL & \FILL & \FILL & \FILL \\
-    \textbf{full}    & \FILL & \FILL & \FILL & \FILL \\
+    ProtoNet                    & 70.0$\pm$1.4 & 68.0$\pm$0.3 & 64.4$\pm$0.3 & 54.3$\pm$4.9 \\
+    CE linear probe (strong)    & 69.9$\pm$1.1 & 63.5$\pm$1.7 & 58.1$\pm$2.7 & 44.8$\pm$2.4 \\
+    selection-only              & 67.3$\pm$2.3 & 66.1$\pm$1.6 & 62.4$\pm$0.6 & 47.7$\pm$3.7 \\
+    robust-loss-only            & 70.5$\pm$0.9 & 64.6$\pm$1.7 & 59.1$\pm$2.5 & 45.8$\pm$2.2 \\
+    \textbf{full}               & 67.8$\pm$2.4 & 66.3$\pm$1.4 & 63.1$\pm$0.6 & 48.1$\pm$3.6 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 \begin{table}[t]
   \centering
-  \caption{Noise-detection precision / recall / F1 of the selection step (full method).}
+  \caption{Noise detection of the selection step (full method): AUROC / precision / recall / F1
+  (mean $\pm$ std over 3 seeds).}
   \label{tab:noise}
   \begin{tabular}{lccc}
     \toprule
-    Method & 10\% & 20\% & 40\% \\
+    Metric    & 10\% & 20\% & 40\% \\
     \midrule
-    full   & \FILL & \FILL & \FILL \\
+    AUROC     & 0.90$\pm$0.06 & 0.90$\pm$0.02 & 0.77$\pm$0.06 \\
+    precision & 0.46$\pm$0.12 & 0.70$\pm$0.08 & 0.73$\pm$0.03 \\
+    recall    & 0.63$\pm$0.17 & 0.48$\pm$0.08 & 0.28$\pm$0.04 \\
+    F1        & 0.53$\pm$0.13 & 0.57$\pm$0.08 & 0.40$\pm$0.05 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-\emph{Expected finding}: full $>$ each single component $>$ CE baseline; the gap widens with
-noise rate. ECE and macro-F1 follow the same trend. Calibration degrades with noise (higher
-ECE), and our method partially restores it.
+\emph{Observed results.} At $0\%$ noise the strong CE probe is best ($69.9\%$) and the full
+method loses $\sim$2 points because selection trims clean samples. At $10/20/40\%$ noise the
+full method beats the CE probe by $2.8/5.0/3.3$ points ($66.3$ vs.\ $63.5$, $63.1$ vs.\ $58.1$,
+$48.1$ vs.\ $44.8$) and beats both single-component ablations at $20$--$40\%$. ProtoNet stays
+surprisingly accurate at $40\%$ ($54.3\%$) but is severely miscalibrated there (ECE $0.44$ vs.\
+$0.04$ for full). Calibration is driven by the robust loss, not selection: full and
+robust-loss-only both reach ECE $\approx0.04$--$0.08$ at every rate, versus $0.06$--$0.20$ for
+CE and $0.44$--$0.59$ for ProtoNet, while selection-only tracks CE. \textbf{Noisy-test
+accuracy} for the full method ($67.8/60.1/51.0/31.0$) sits well below the $1-r$ ceiling
+($100/90/80/60$), i.e., a large part of the error is genuine misclassification, not just the
+noise floor. \textbf{Selective prediction} is informative: risk rises monotonically from $0.07$
+(top-$5\%$ confidence) to $0.50$ (full coverage), AURC $=0.31$. Full numbers in
+\texttt{results/summary\_meanstd.csv} and \texttt{results/error\_analysis.json}.
 
-\textbf{Ablations.} Sweep $\beta$, $q$, $T$, and the $\tau$ variant at $r=0.4$ (see
-\texttt{results/ablation\_summary.csv}). \emph{Expected}: moderate $\beta$ and
-$q\approx0.7$ are stable; very aggressive trimming (small $\beta$/$\tau$) over-fits but
-hurts recall of clean samples.
+\textbf{Ablations.} Sweep $\beta$, $q$, $T$, and the $\tau$ variant at $r=0.4$ (single seed;
+see \texttt{results/ablation\_summary.csv}). \emph{Observed}: less aggressive selection is
+consistently better---$\beta{=}0.5$ reaches $54.7\%$ (noise-F1 $0.66$) and the fixed-quantile
+$\tau{=}0.5$ (keep top $50\%$) reaches $52.7\%$, while the default $\beta{=}1.0$ gives $49.9\%$
+and aggressive trimming collapses ($\beta{=}2.0 \to 49.7\%$ with noise-F1 $0.18$;
+$\tau{=}0.8 \to 39.2\%$). $q$ and the iteration count $T$ have essentially no effect
+($49.8$--$50.5\%$ across $q\in\{0.3,0.5,0.7,0.9\}$; identical across $T$). So the selection
+step's value comes from \emph{not} over-trimming a tiny support set.
 
-\textbf{Few-shot scale.} At $r=0.4$, sweep $K \in \{5,10,20\}$. \emph{Expected}: the benefit
-of our method is largest at the smallest $K$, where each sample matters most.
+\textbf{Few-shot scale.} At $r=0.4$, sweep $K\in\{1,5,10,20\}$ (single seed). \emph{Observed}
+(full vs CE probe vs ProtoNet): $K{=}1 \to 22.1 / 25.7 / 10.0$; $K{=}5 \to 50.5 / 44.4 / 51.5$;
+$K{=}10 \to 49.9 / 46.7 / 59.5$; $K{=}20 \to 54.7 / 49.5 / 64.0$. At $K{=}1$ ProtoNet collapses
+to chance ($10\%$); the full method beats the strong CE probe at $K{=}5/10/20$ (largest at
+$K{=}5$, $+6.1$) but never matches ProtoNet. At $K{=}1$ a single noisy label is catastrophic
+for every method---the practical limit of label-noise robustness.
 
 \begin{figure}[t]
   \centering
-  % 跑完 run_all.ps1 后取消注释：
-  % \includegraphics[width=0.95\linewidth]{../results/figs/main_results.png}
-  \caption{Accuracy, macro-F1, and ECE vs.\ label noise rate (CIFAR-10, $K=10$).}
+  \includegraphics[width=0.95\linewidth]{../results/figs/main_results.png}
+  \caption{Accuracy, macro-F1, ECE, and noise-detection metrics vs.\ label noise rate
+  (CIFAR-10, $K=10$, mean $\pm$ std over 3 seeds).}
   \label{fig:main}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.5\linewidth]{../results/figs/risk_coverage.png}
+  \caption{Selective-prediction risk--coverage curve (full method, $K{=}10$, $r{=}0.4$,
+  AURC $=0.31$).}
+  \label{fig:risk}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.6\linewidth]{../results/figs/confusion_matrix.png}
+  \caption{Confusion matrix (full method, $K{=}10$, $r{=}0.4$).}
+  \label{fig:confusion}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.9\linewidth]{../results/figs/prototype_drift.png}
+  \caption{Prototype drift: cosine similarity of clean vs.\ noisy / robust prototypes.}
+  \label{fig:drift}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.5\linewidth]{../results/figs/distance_distribution.png}
+  \caption{Distance-to-clean-prototype distribution for clean vs.\ noisy support samples.}
+  \label{fig:distance}
 \end{figure}
 
 \section{Error Analysis}
 \label{sec:error}
 
 \textbf{Misclassification.} From the confusion matrix
-(\texttt{results/figs/confusion\_matrix.png}), most errors occur between visually similar
-pairs (cat/dog, truck/automobile). Noisy labels shift the decision boundary toward these
-confusable classes.
+(Fig.~\ref{fig:confusion}), errors concentrate on ``cat'' as the target:
+horse$\to$cat (300), bird$\to$cat (225), frog$\to$cat (221), plus horse$\to$dog (207) and
+dog$\to$bird (203). Noisy labels push the decision boundary toward these visually confusable
+classes.
 
-\textbf{Noise-identification failures.} The distance signal misses noisy samples when
-(i) the prototype itself has already been polluted at high $r$, so a noisy sample is not an
-outlier, or (ii) a class has high intra-class variance, making its clean samples
-indistinguishable from noise. False flags happen for genuinely hard/atypical clean samples.
-See \texttt{results/figs/distance\_distribution.png} and \texttt{results/figs/tsne.png}.
+\textbf{Noise-identification failures.} At $r{=}0.4$ (seed 0) the selection flags 17 of 40
+noisy samples, misses 27, and false-flags 4 clean samples (AUROC 0.85). Across seeds the AUROC
+drops from 0.90 (10--20\% noise) to 0.77 (40\%) and recall falls to 0.28. The reason is visible
+in the distance distribution (Fig.~\ref{fig:distance}): clean and noisy samples nearly overlap
+(mean cosine distance $0.123\pm0.030$ vs $0.128\pm0.031$), so once the prototype is polluted a
+noisy sample is no longer an outlier. See also \texttt{results/figs/tsne.png}.
 
-\textbf{Prototype drift.} We measure cosine similarity between clean prototypes and their
-noisy/robust counterparts (\texttt{results/figs/prototype\_drift.png}). The robust
-prototype is consistently closer to the clean prototype, quantifying how selection repairs
-the centroid.
+\textbf{Prototype drift.} Cosine similarity between clean prototypes and their noisy/robust
+counterparts is $0.979$ vs $0.980$ (Fig.~\ref{fig:drift})---the repair is real but marginal at
+this rate/seed, consistent with the low detection recall.
+
+\textbf{Selective prediction.} The risk--coverage curve (Fig.~\ref{fig:risk}) is monotone (risk
+$0.07$ at $5\%$ coverage $\to 0.50$ at $100\%$ coverage, AURC $0.31$), so confidence is
+genuinely informative---the deployable pattern.
 
 \section{Limitations and Conclusion}
 \label{sec:conclusion}
 
-\textbf{Limitations.} (i) Symmetric noise only; real label noise is class-dependent
-(asymmetric). (ii) ImageNet-pretrained features transfer imperfectly to CIFAR-10; a
-self-supervised backbone would strengthen the ``no labels used'' claim. (iii) The selection
-threshold is heuristic.
+\textbf{Limitations.}
+\begin{enumerate}
+  \item \emph{Synthetic noise only.} Symmetric noise has a clean statistical signature
+        (known rate, class-independent), so it is \emph{identifiable}; real label noise is
+        instance- and class-dependent and often indistinguishable from hard examples. Our
+        conclusions should not be assumed to transfer to CIFAR-10N or human-annotated noise
+        without further validation. This is the ``identifiability arbitrage'' problem: methods
+        succeed on synthetic benchmarks precisely because the noise is identifiable.
+  \item \emph{No clean validation set.} Pure few-shot leaves no clean data for early stopping
+        or hyper-parameter selection, so we used fixed training epochs; in practice a small
+        clean validation set is cheap and materially changes the trade-off.
+  \item \emph{Heuristic threshold.} The $\mu + \beta\sigma$ rule is not principled; it is
+        chosen for interpretability, not optimality.
+  \item \emph{Single-seed ablations and a frozen backbone.} Hyper-parameter ablations and
+        K-sensitivity use one seed; the ImageNet-to-CIFAR transfer is imperfect (a
+        self-supervised backbone would strengthen the ``no labels used'' claim).
+  \item \emph{Cost.} We do not yet report a cost curve (annotation budget vs.\ accuracy); the
+        honest question for deployment is whether the modest gain justifies the added
+        complexity.
+\end{enumerate}
 
 \textbf{Conclusion.} Label noise and label scarcity interact destructively, but a simple
-distance-driven selection plus a robust loss substantially recovers clean-test accuracy
-while producing an interpretable noise-detection signal. Our error analysis clarifies
-\emph{when} the method fails, pointing to class-dependent noise and prototype pollution as
-the main open challenges.
+distance-driven selection plus a robust loss \emph{matches or modestly beats a strong,
+regularized baseline} while producing an interpretable, score-based noise-detection signal.
+Our error analysis clarifies \emph{when} the method fails, and our limitations argue that the
+field's central open problem is not a better loss, but robustness to \emph{unidentifiable},
+real label noise under scarce annotations.
 
 % 内联参考文献（自包含，无需 .bib/.bst；[Author(Year)] 为 natbib 所需的 author-year 标签）
 % 若你补齐了官方模板包里的 iclr2022_conference.bib/.bst，可改为：

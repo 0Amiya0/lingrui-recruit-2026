@@ -1,7 +1,7 @@
 """Baseline 方法。
 
 - ProtoNet：Prototypical Network（类均值原型 + 余弦最近邻），few-shot 标准参考。
-- CELinearProbe：在 support 特征上训练线性分类头 + 交叉熵（对应"普通交叉熵"）。
+- CELinearProbe：在 support 特征上训练线性分类头 + 交叉熵（强基线：label smoothing + weight decay）。
 """
 import numpy as np
 import torch
@@ -36,13 +36,16 @@ class ProtoNet:
 
 class CELinearProbe:
     def __init__(self, feat_dim: int, n_way: int, lr: float = 0.1, epochs: int = 200,
-                 device: str = "cpu", seed: int = 0):
+                 device: str = "cpu", seed: int = 0, weight_decay: float = 1e-4,
+                 label_smoothing: float = 0.1):
         self.feat_dim = feat_dim
         self.n_way = n_way
         self.lr = lr
         self.epochs = epochs
         self.device = device
         self.seed = seed
+        self.weight_decay = weight_decay
+        self.label_smoothing = label_smoothing
         self.head = None
 
     def fit(self, support_feats, support_labels):
@@ -50,12 +53,12 @@ class CELinearProbe:
         X = torch.as_tensor(support_feats, dtype=torch.float32)
         y = torch.as_tensor(support_labels, dtype=torch.long)
         self.head = nn.Linear(self.feat_dim, self.n_way).to(self.device)
-        opt = torch.optim.Adam(self.head.parameters(), lr=self.lr)
+        opt = torch.optim.Adam(self.head.parameters(), lr=self.lr, weight_decay=self.weight_decay)
         Xd, yd = X.to(self.device), y.to(self.device)
         self.head.train()
         for _ in range(self.epochs):
             opt.zero_grad()
-            loss = F.cross_entropy(self.head(Xd), yd)
+            loss = F.cross_entropy(self.head(Xd), yd, label_smoothing=self.label_smoothing)
             loss.backward()
             opt.step()
         self.head.eval()

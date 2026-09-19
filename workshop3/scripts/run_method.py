@@ -15,11 +15,13 @@ import numpy as np
 from src.config import Config
 from src.utils import seed_everything, get_device, save_json
 from src.method import distance_based_selection, train_linear_head, head_proba
-from src.metrics import accuracy, macro_f1, expected_calibration_error, noise_detection_metrics
+from src.metrics import (accuracy, macro_f1, expected_calibration_error,
+                         noise_detection_metrics, noise_detection_auroc)
+from src.dataset import inject_symmetric_noise
 
 
 FIELDS = ["k_shot", "noise_rate", "seed", "method", "accuracy", "macro_f1", "ece",
-          "noise_precision", "noise_recall", "noise_f1"]
+          "noisy_test_acc", "noise_precision", "noise_recall", "noise_f1", "noise_auroc"]
 
 
 def load_data(cfg: Config):
@@ -41,12 +43,14 @@ def main(cfg: Config):
     feat_dim = support_feats.shape[1]
     print(f"support {support_feats.shape} | test {test_feats.shape} | 噪声样本 {int(noise_mask.sum())} 个")
 
-    # 样本筛选（selection-only 与 full 共用）
-    pred_noise, keep = distance_based_selection(
+    # 样本筛选（selection-only 与 full 共用）；dist 为噪声似然分数（用于 AUROC）
+    pred_noise, keep, dist = distance_based_selection(
         support_feats, support_noisy, cfg.n_way, n_iters=cfg.sel_iters, beta=cfg.sel_beta)
     noise_metrics = noise_detection_metrics(pred_noise, noise_mask)
+    noise_auroc = noise_detection_auroc(dist, noise_mask)
     print(f"[筛选] 判为噪声 {int(pred_noise.sum())} 个 | "
-          f"precision={noise_metrics['precision']:.3f} recall={noise_metrics['recall']:.3f} f1={noise_metrics['f1']:.3f}")
+          f"precision={noise_metrics['precision']:.3f} recall={noise_metrics['recall']:.3f} "
+          f"f1={noise_metrics['f1']:.3f} auroc={noise_auroc:.3f}")
 
     # 三种变体：(名称, 是否用筛选后的子集, 损失)
     variants = [
@@ -54,6 +58,10 @@ def main(cfg: Config):
         ("robust-loss-only", None, cfg.loss),
         ("full", keep, cfg.loss),
     ]
+
+    # 含噪测试集（独立 seed 注入）
+    noisy_test_labels, _ = inject_symmetric_noise(
+        test_labels, cfg.n_way, cfg.noise_rate, seed=cfg.seed + 10000)
 
     rows = []
     for name, sel_mask, loss_name in variants:
@@ -69,12 +77,14 @@ def main(cfg: Config):
             "accuracy": accuracy(test_labels, pred),
             "macro_f1": macro_f1(test_labels, pred),
             "ece": expected_calibration_error(probs, test_labels),
+            "noisy_test_acc": accuracy(noisy_test_labels, pred),
         }
         if sel_mask is not None:
             row.update({
                 "noise_precision": noise_metrics["precision"],
                 "noise_recall": noise_metrics["recall"],
                 "noise_f1": noise_metrics["f1"],
+                "noise_auroc": noise_auroc,
             })
         rows.append(row)
 

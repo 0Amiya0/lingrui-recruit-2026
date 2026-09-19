@@ -15,9 +15,10 @@ from src.config import Config
 from src.utils import seed_everything, get_device, save_json
 from src.baseline import ProtoNet, CELinearProbe
 from src.metrics import accuracy, macro_f1, expected_calibration_error
+from src.dataset import inject_symmetric_noise
 
 
-FIELDS = ["k_shot", "noise_rate", "seed", "method", "accuracy", "macro_f1", "ece"]
+FIELDS = ["k_shot", "noise_rate", "seed", "method", "accuracy", "macro_f1", "ece", "noisy_test_acc"]
 
 
 def load_data(cfg: Config):
@@ -32,14 +33,17 @@ def load_data(cfg: Config):
     )
 
 
-def evaluate(method_name, probs, test_labels):
+def evaluate(method_name, probs, test_labels, noisy_test_labels=None):
     pred = probs.argmax(1)
-    return {
+    row = {
         "method": method_name,
         "accuracy": accuracy(test_labels, pred),
         "macro_f1": macro_f1(test_labels, pred),
         "ece": expected_calibration_error(probs, test_labels),
     }
+    if noisy_test_labels is not None:
+        row["noisy_test_acc"] = accuracy(noisy_test_labels, pred)
+    return row
 
 
 def main(cfg: Config):
@@ -53,13 +57,18 @@ def main(cfg: Config):
 
     rows = []
 
+    # 含噪测试集：给干净测试标签注入同比例对称噪声（独立 seed）。
+    # 注意：含噪参考下，即使完美分类器，一致性上限也≈1-noise_rate（错标签本身不可预测）。
+    noisy_test_labels, _ = inject_symmetric_noise(
+        test_labels, cfg.n_way, cfg.noise_rate, seed=cfg.seed + 10000)
+
     # Baseline A：ProtoNet（用噪声标签建原型）
     proto = ProtoNet(n_way=cfg.n_way).fit(support_feats, support_noisy)
-    rows.append(evaluate("ProtoNet", proto.predict_proba(test_feats), test_labels))
+    rows.append(evaluate("ProtoNet", proto.predict_proba(test_feats), test_labels, noisy_test_labels))
 
-    # Baseline B：CE 线性分类头（用噪声标签训练）
+    # Baseline B：CE 线性分类头（强基线：label smoothing + weight decay）
     probe = CELinearProbe(feat_dim, cfg.n_way, device=str(device), seed=cfg.seed).fit(support_feats, support_noisy)
-    rows.append(evaluate("CE-linear-probe", probe.predict_proba(test_feats), test_labels))
+    rows.append(evaluate("CE-linear-probe", probe.predict_proba(test_feats), test_labels, noisy_test_labels))
 
     for r in rows:
         r.update({"k_shot": cfg.k_shot, "noise_rate": cfg.noise_rate, "seed": cfg.seed})
@@ -79,7 +88,8 @@ def main(cfg: Config):
             writer.writerow({k: r[k] for k in FIELDS})
 
     for r in rows:
-        print(f"[{r['method']}] acc={r['accuracy']*100:.2f}%  macroF1={r['macro_f1']:.4f}  ece={r['ece']:.4f}")
+        print(f"[{r['method']}] acc={r['accuracy']*100:.2f}%  macroF1={r['macro_f1']:.4f}  "
+              f"ece={r['ece']:.4f}  noisyAcc={r['noisy_test_acc']*100:.2f}%")
     print(f"[完成] 结果写入 {csv_path}")
 
 
