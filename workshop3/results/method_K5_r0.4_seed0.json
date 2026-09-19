@@ -1,0 +1,40 @@
+[
+  {
+    "k_shot": 5,
+    "noise_rate": 0.4,
+    "seed": 0,
+    "method": "selection-only",
+    "accuracy": 0.5142,
+    "macro_f1": 0.4901546358460035,
+    "ece": 0.1458111140363602,
+    "noisy_test_acc": 0.3268,
+    "noise_precision": 1.0,
+    "noise_recall": 0.45,
+    "noise_f1": 0.6206896551724138,
+    "noise_auroc": 0.8883333333333333
+  },
+  {
+    "k_shot": 5,
+    "noise_rate": 0.4,
+    "seed": 0,
+    "method": "robust-loss-only",
+    "accuracy": 0.4481,
+    "macro_f1": 0.4083329328825859,
+    "ece": 0.035387876662952,
+    "noisy_test_acc": 0.2939
+  },
+  {
+    "k_shot": 5,
+    "noise_rate": 0.4,
+    "seed": 0,
+    "method": "full",
+    "accuracy": 0.5054,
+    "macro_f1": 0.47834853029825364,
+    "ece": 0.04455158758875233,
+    "noisy_test_acc": 0.3247,
+    "noise_precision": 1.0,
+    "noise_recall": 0.45,
+    "noise_f1": 0.6206896551724138,
+    "noise_auroc": 0.8883333333333333
+  }
+]

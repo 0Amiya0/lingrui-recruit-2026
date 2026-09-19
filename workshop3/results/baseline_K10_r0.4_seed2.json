@@ -1,0 +1,22 @@
+[
+  {
+    "method": "ProtoNet",
+    "accuracy": 0.5562,
+    "macro_f1": 0.5435951706575027,
+    "ece": 0.4511861200325191,
+    "noisy_test_acc": 0.3509,
+    "k_shot": 10,
+    "noise_rate": 0.4,
+    "seed": 2
+  },
+  {
+    "method": "CE-linear-probe",
+    "accuracy": 0.4637,
+    "macro_f1": 0.463850153100047,
+    "ece": 0.06492703999067524,
+    "noisy_test_acc": 0.2933,
+    "k_shot": 10,
+    "noise_rate": 0.4,
+    "seed": 2
+  }
+]

@@ -1,7 +1,5 @@
 __pycache__/
 *.pyc
 data/
-results/
 *.npz
-*.png
 .DS_Store
