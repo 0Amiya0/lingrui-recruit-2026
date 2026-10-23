@@ -1,0 +1,5 @@
+Flask>=3.0,<4
+waitress>=3.0,<4
+Pillow>=10
+requests>=2.31
+# Install torch + torchvision separately for your CUDA/CPU platform; see README.

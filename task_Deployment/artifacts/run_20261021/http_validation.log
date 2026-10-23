@@ -1,0 +1,46 @@
+health: HTTP 200, expected 200, passed=True
+index: HTTP 200, expected 200, passed=True
+sum_multipart: HTTP 200, expected 200, passed=True
+sum_json: HTTP 200, expected 200, passed=True
+subtract_multipart: HTTP 200, expected 200, passed=True
+subtract_json: HTTP 200, expected 200, passed=True
+multiply_multipart: HTTP 200, expected 200, passed=True
+multiply_json: HTTP 200, expected 200, passed=True
+divide_multipart: HTTP 200, expected 200, passed=True
+divide_json: HTTP 200, expected 200, passed=True
+root_urlencoded: HTTP 200, expected 200, passed=True
+missing_key: HTTP 401, expected 401, passed=True
+wrong_key: HTTP 401, expected 401, passed=True
+missing_field: HTTP 400, expected 400, passed=True
+divide_zero: HTTP 400, expected 400, passed=True
+bad_operation: HTTP 400, expected 400, passed=True
+nan: HTTP 400, expected 400, passed=True
+bool: HTTP 400, expected 400, passed=True
+overflow: HTTP 400, expected 400, passed=True
+json_array: HTTP 400, expected 400, passed=True
+malformed_json: HTTP 400, expected 400, passed=True
+wrong_calculate_type: HTTP 415, expected 415, passed=True
+duplicate_field: HTTP 400, expected 400, passed=True
+wrong_upload_type: HTTP 415, expected 415, passed=True
+missing_file: HTTP 400, expected 400, passed=True
+invalid_image: HTTP 400, expected 400, passed=True
+empty_file: HTTP 400, expected 400, passed=True
+valid_image_no_model: HTTP 503, expected 503, passed=True
+oversize_pixels: HTTP 400, expected 400, passed=True
+oversize_body: HTTP 413, expected 413, passed=True
+not_found: HTTP 404, expected 404, passed=True
+wrong_method: HTTP 405, expected 405, passed=True
+{
+  "phase": "base",
+  "base_url": "http://127.0.0.1:65464",
+  "checkpoint": null,
+  "python": "C:\\Users\\NiZhe\\anaconda3\\python.exe",
+  "model": "none",
+  "framework": "Flask development server; local validation only",
+  "pid": 26632,
+  "checks": 32,
+  "passed": 32,
+  "failed": 0,
+  "server_stopped": true,
+  "server_exit_code": 1
+}

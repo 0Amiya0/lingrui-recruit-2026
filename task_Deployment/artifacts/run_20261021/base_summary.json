@@ -1,0 +1,14 @@
+{
+  "phase": "base",
+  "base_url": "http://127.0.0.1:65464",
+  "checkpoint": null,
+  "python": "C:\\Users\\NiZhe\\anaconda3\\python.exe",
+  "model": "none",
+  "framework": "Flask development server; local validation only",
+  "pid": 26632,
+  "checks": 32,
+  "passed": 32,
+  "failed": 0,
+  "server_stopped": true,
+  "server_exit_code": 1
+}

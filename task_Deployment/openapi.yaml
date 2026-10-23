@@ -1,0 +1,92 @@
+openapi: 3.0.3
+info:
+  title: Lingrui ML API
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:5000
+security:
+  - ApiKey: []
+components:
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+paths:
+  /health:
+    get:
+      security: []
+      responses:
+        '200':
+          description: Service status and model_ready flag
+  /calculate:
+    post:
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [Operation, Data_A, Data_B]
+              properties:
+                Operation:
+                  type: string
+                  enum: [sum, subtract, multiply, divide]
+                Data_A:
+                  type: number
+                  example: 8
+                Data_B:
+                  type: number
+                  example: 2
+          application/json:
+            schema:
+              type: object
+              required: [Operation, Data_A, Data_B]
+              properties:
+                Operation:
+                  type: string
+                  enum: [sum, subtract, multiply, divide]
+                Data_A:
+                  type: number
+                Data_B:
+                  type: number
+      responses:
+        '200':
+          description: Calculation result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Result:
+                    type: number
+        '400':
+          description: Invalid input, nonfinite numbers or division by zero
+        '401':
+          description: Invalid API key
+        '415':
+          description: Unsupported content type
+  /predict:
+    post:
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Classification predictions or base64 PNG deraining output
+        '400':
+          description: Missing file or invalid image
+        '401':
+          description: Invalid API key
+        '413':
+          description: Body larger than 8 MiB
+        '503':
+          description: No inference model configured

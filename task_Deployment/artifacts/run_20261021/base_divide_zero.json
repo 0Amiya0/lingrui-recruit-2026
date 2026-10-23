@@ -1,0 +1,22 @@
+{
+  "name": "divide_zero",
+  "method": "POST",
+  "path": "/calculate",
+  "request_content_type": "application/json",
+  "request_bytes": 49,
+  "request_key": "valid",
+  "expected_status": 400,
+  "status": 400,
+  "response_headers": {
+    "Server": "Werkzeug/3.1.3 Python/3.13.5",
+    "Date": "Wed, 21 Oct 2026 04:45:26 GMT",
+    "Content-Type": "application/json",
+    "Content-Length": "45",
+    "Connection": "close"
+  },
+  "response": {
+    "error": "除数不能为 0"
+  },
+  "elapsed_seconds": 0.009,
+  "passed": true
+}

@@ -1,0 +1,14 @@
+test_actual_training_batch_target_shift (test_tools.ToolTests.test_actual_training_batch_target_shift) ... ok
+test_causal_shapes_and_weight_tying (test_tools.ToolTests.test_causal_shapes_and_weight_tying) ... ok
+test_checkpoint_round_trip_with_compiled_prefix (test_tools.ToolTests.test_checkpoint_round_trip_with_compiled_prefix) ... ok
+test_log_parser (test_tools.ToolTests.test_log_parser) ... ok
+test_sampling_reproducibility_and_validation (test_tools.ToolTests.test_sampling_reproducibility_and_validation) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 3.857s
+
+OK
+number of parameters: 0.00M
+number of parameters: 0.00M
+number of parameters: 0.00M
+number of parameters: 0.00M

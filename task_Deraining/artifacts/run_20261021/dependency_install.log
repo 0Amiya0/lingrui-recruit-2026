@@ -1,0 +1,9 @@
+Collecting protobuf<7,>=6.31.1
+  Downloading protobuf-6.33.6-cp310-abi3-win_amd64.whl.metadata (593 bytes)
+Downloading protobuf-6.33.6-cp310-abi3-win_amd64.whl (437 kB)
+Installing collected packages: protobuf
+  Attempting uninstall: protobuf
+    Found existing installation: protobuf 7.36.2
+    Uninstalling protobuf-7.36.2:
+      Successfully uninstalled protobuf-7.36.2
+Successfully installed protobuf-6.33.6

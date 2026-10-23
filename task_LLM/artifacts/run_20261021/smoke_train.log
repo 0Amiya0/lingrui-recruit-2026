@@ -1,0 +1,94 @@
+C:\Users\NiZhe\Desktop\studioRecruit\Lingrui\task_LLM\nanoGPT\train.py:196: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  scaler = torch.cuda.amp.GradScaler(enabled=(dtype == 'float16'))
+Overriding config with config/train_shakespeare_char_cpu.py:
+# train a miniature character-level shakespeare model on CPU
+# (scaled down from train_shakespeare_char.py to run in reasonable time on CPU)
+
+out_dir = 'out-shakespeare-char-cpu'
+eval_interval = 150 # evaluate every 150 iterations
+eval_iters = 25     # average over 25 batches for stable eval loss
+log_interval = 10   # print loss every 10 iterations
+
+# we expect to overfit on this small dataset, so only save when val improves
+always_save_checkpoint = False
+
+wandb_log = False
+wandb_project = 'shakespeare-char'
+wandb_run_name = 'mini-gpt-cpu'
+
+dataset = 'shakespeare_char'
+gradient_accumulation_steps = 1
+batch_size = 64
+block_size = 128 # context of up to 128 previous characters
+
+# a smaller "baby GPT" so training is feasible on CPU
+n_layer = 4
+n_head = 4
+n_embd = 128
+dropout = 0.2
+
+learning_rate = 1e-3
+max_iters = 1200
+lr_decay_iters = 1200 # make equal to max_iters usually
+min_lr = 1e-4 # learning_rate / 10 usually
+beta2 = 0.99 # make a bit bigger because number of tokens per iter is small
+
+warmup_iters = 100
+
+# CPU-only environment
+device = 'cpu'
+compile = False
+dtype = 'float32'
+
+Overriding: out_dir = C:\Users\NiZhe\Desktop\studioRecruit\Lingrui\task_LLM\artifacts\run_20261021\smoke-model
+Overriding: batch_size = 2
+Overriding: block_size = 32
+Overriding: n_layer = 1
+Overriding: n_head = 2
+Overriding: n_embd = 32
+Overriding: max_iters = 20
+Overriding: eval_interval = 4
+Overriding: eval_iters = 4
+Overriding: log_interval = 1
+Overriding: warmup_iters = 1
+Overriding: lr_decay_iters = 20
+Overriding: always_save_checkpoint = True
+tokens per iteration will be: 64
+found vocab_size = 65 (inside data\shakespeare_char\meta.pkl)
+Initializing a new model from scratch
+number of parameters: 0.01M
+num decayed parameter tensors: 6, with 15,392 parameters
+num non-decayed parameter tensors: 3, with 96 parameters
+using fused AdamW: False
+step 0: train loss 4.1624, val loss 4.1680
+iter 0: loss 4.1741, time 107.48ms, mfu -100.00%
+iter 1: loss 4.1680, time 8.03ms, mfu -100.00%
+iter 2: loss 4.1750, time 7.58ms, mfu -100.00%
+iter 3: loss 4.1452, time 8.82ms, mfu -100.00%
+step 4: train loss 4.1193, val loss 4.1120
+saving checkpoint to C:\Users\NiZhe\Desktop\studioRecruit\Lingrui\task_LLM\artifacts\run_20261021\smoke-model
+iter 4: loss 4.1666, time 50.06ms, mfu -100.00%
+iter 5: loss 4.1084, time 9.21ms, mfu 0.00%
+iter 6: loss 4.1507, time 9.21ms, mfu 0.00%
+iter 7: loss 4.0943, time 8.07ms, mfu 0.00%
+step 8: train loss 4.0237, val loss 4.0225
+saving checkpoint to C:\Users\NiZhe\Desktop\studioRecruit\Lingrui\task_LLM\artifacts\run_20261021\smoke-model
+iter 8: loss 4.0294, time 40.93ms, mfu 0.00%
+iter 9: loss 4.0029, time 8.28ms, mfu 0.00%
+iter 10: loss 4.0452, time 7.93ms, mfu 0.00%
+iter 11: loss 3.9592, time 7.71ms, mfu 0.00%
+step 12: train loss 3.9430, val loss 3.9464
+saving checkpoint to C:\Users\NiZhe\Desktop\studioRecruit\Lingrui\task_LLM\artifacts\run_20261021\smoke-model
+iter 12: loss 4.0232, time 32.74ms, mfu 0.00%
+iter 13: loss 4.0084, time 7.30ms, mfu 0.00%
+iter 14: loss 3.9503, time 6.90ms, mfu 0.00%
+iter 15: loss 3.9975, time 7.09ms, mfu 0.00%
+step 16: train loss 3.9484, val loss 3.9301
+saving checkpoint to C:\Users\NiZhe\Desktop\studioRecruit\Lingrui\task_LLM\artifacts\run_20261021\smoke-model
+iter 16: loss 3.9130, time 28.69ms, mfu 0.00%
+iter 17: loss 3.9523, time 12.25ms, mfu 0.00%
+iter 18: loss 3.9249, time 8.19ms, mfu 0.00%
+iter 19: loss 3.9082, time 7.26ms, mfu 0.00%
+step 20: train loss 3.9290, val loss 3.9339
+saving checkpoint to C:\Users\NiZhe\Desktop\studioRecruit\Lingrui\task_LLM\artifacts\run_20261021\smoke-model
+iter 20: loss 3.9505, time 29.66ms, mfu 0.00%

@@ -1,0 +1,147 @@
+[
+  {
+    "name": "tests",
+    "argv": [
+      "C:\\Users\\NiZhe\\anaconda3\\python.exe",
+      "-c",
+      "import torch,unittest; torch.set_num_threads(1); suite=unittest.defaultTestLoader.discover('tests'); result=unittest.TextTestRunner(verbosity=2).run(suite); raise SystemExit(not result.wasSuccessful())"
+    ],
+    "cwd": "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM",
+    "returncode": 0,
+    "elapsed_seconds": 12.707,
+    "log": "tests.log"
+  },
+  {
+    "name": "environment",
+    "argv": [
+      "C:\\Users\\NiZhe\\anaconda3\\python.exe",
+      "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM\\artifacts\\run_20261021\\verify_local.py"
+    ],
+    "cwd": "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM",
+    "returncode": 0,
+    "elapsed_seconds": 10.03,
+    "log": "environment.log"
+  },
+  {
+    "name": "generation",
+    "argv": [
+      "C:\\Users\\NiZhe\\anaconda3\\python.exe",
+      "generate_demo.py",
+      "--threads",
+      "1",
+      "--seed",
+      "1337",
+      "--num-samples",
+      "2",
+      "--max-new-tokens",
+      "300",
+      "--output",
+      "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM\\artifacts\\run_20261021\\generation.json"
+    ],
+    "cwd": "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM",
+    "returncode": 0,
+    "elapsed_seconds": 27.878,
+    "log": "generation.log"
+  },
+  {
+    "name": "generation_repeat",
+    "argv": [
+      "C:\\Users\\NiZhe\\anaconda3\\python.exe",
+      "generate_demo.py",
+      "--threads",
+      "1",
+      "--seed",
+      "1337",
+      "--num-samples",
+      "2",
+      "--max-new-tokens",
+      "300",
+      "--output",
+      "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM\\artifacts\\run_20261021\\generation_repeat.json"
+    ],
+    "cwd": "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM",
+    "returncode": 0,
+    "elapsed_seconds": 23.668,
+    "log": "generation_repeat.log"
+  },
+  {
+    "name": "historical_plot",
+    "argv": [
+      "C:\\Users\\NiZhe\\anaconda3\\python.exe",
+      "plot_loss.py",
+      "--log",
+      "train_log.txt",
+      "--csv",
+      "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM\\artifacts\\run_20261021\\historical_loss.csv",
+      "--output",
+      "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM\\artifacts\\run_20261021\\historical_loss_curve.png"
+    ],
+    "cwd": "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM",
+    "returncode": 0,
+    "elapsed_seconds": 2.995,
+    "log": "historical_plot.log"
+  },
+  {
+    "name": "smoke_train",
+    "argv": [
+      "C:\\Users\\NiZhe\\anaconda3\\python.exe",
+      "train.py",
+      "config/train_shakespeare_char_cpu.py",
+      "--out_dir=C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM\\artifacts\\run_20261021\\smoke-model",
+      "--batch_size=2",
+      "--block_size=32",
+      "--n_layer=1",
+      "--n_head=2",
+      "--n_embd=32",
+      "--max_iters=20",
+      "--eval_interval=4",
+      "--eval_iters=4",
+      "--log_interval=1",
+      "--warmup_iters=1",
+      "--lr_decay_iters=20",
+      "--always_save_checkpoint=True"
+    ],
+    "cwd": "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM\\nanoGPT",
+    "returncode": 0,
+    "elapsed_seconds": 13.399,
+    "log": "smoke_train.log"
+  },
+  {
+    "name": "smoke_generation",
+    "argv": [
+      "C:\\Users\\NiZhe\\anaconda3\\python.exe",
+      "generate_demo.py",
+      "--threads",
+      "1",
+      "--checkpoint",
+      "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM\\artifacts\\run_20261021\\smoke-model\\ckpt.pt",
+      "--num-samples",
+      "1",
+      "--max-new-tokens",
+      "80",
+      "--output",
+      "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM\\artifacts\\run_20261021\\smoke_generation.json"
+    ],
+    "cwd": "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM",
+    "returncode": 0,
+    "elapsed_seconds": 8.726,
+    "log": "smoke_generation.log"
+  },
+  {
+    "name": "smoke_plot",
+    "argv": [
+      "C:\\Users\\NiZhe\\anaconda3\\python.exe",
+      "plot_loss.py",
+      "--log",
+      "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM\\artifacts\\run_20261021\\smoke_train.log",
+      "--csv",
+      "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM\\artifacts\\run_20261021\\smoke_loss.csv",
+      "--output",
+      "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM\\artifacts\\run_20261021\\smoke_loss_curve.png"
+    ],
+    "cwd": "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM",
+    "returncode": 0,
+    "elapsed_seconds": 3.986,
+    "log": "smoke_plot.log"
+  }
+]

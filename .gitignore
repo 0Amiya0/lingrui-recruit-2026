@@ -1,2 +1,6 @@
 # CIFAR-10 raw data (torchvision download, large - do not commit)
 CIFAR10/
+
+# Python cache
+__pycache__/
+*.pyc

@@ -1,0 +1,7 @@
+# Install matching torch>=2.3 and torchvision>=0.18 separately for your CUDA platform.
+numpy>=1.26
+Pillow>=10
+scikit-image>=0.22
+tqdm>=4.66
+lpips>=0.1.4
+onnx>=1.16

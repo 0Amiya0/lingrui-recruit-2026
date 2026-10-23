@@ -1,0 +1,31 @@
+{
+  "checkpoint": "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\task_LLM\\nanoGPT\\out-shakespeare-char-cpu\\ckpt.pt",
+  "iter_num": 1200,
+  "best_val_loss": 1.9523751735687256,
+  "model_args": {
+    "n_layer": 4,
+    "n_head": 4,
+    "n_embd": 128,
+    "block_size": 128,
+    "bias": false,
+    "vocab_size": 65,
+    "dropout": 0.2
+  },
+  "sampling": {
+    "seed": 1337,
+    "temperature": 0.8,
+    "top_k": 200,
+    "max_new_tokens": 300,
+    "prompt": "\n"
+  },
+  "samples": {
+    "trained": [
+      "\nCOLUTES:\nThee pace on rolouns eare and\nThouge this por thou this tee; and a nothimser self;\nThat it coy mor ber somenglant:\nNot of the nothe by sopor his now; they and the gelloan'ds\nMarties prome I so hart thougs he hand my hear\nOf in es she not blaie prosed and faull im gill.\n\nCly MENIUS:\nAy, I co",
+      "\nHe a fayd for draiang shall, will epon and it grace\nHimold frie; 'There not, if the he my death ry dofourd:\nTo thou not ave, and him\nRier, lett that the rear of the he be heare I'll a gon.\n\nDUKE VINCERY:\nWhere madow!\n\nANGELY:\nThe be comes I cannting of beem all am him,\nOr be your alt he\nfother with "
+    ],
+    "untrained": [
+      "\n-pzlYaS ;czde.'wEyT,YVrzlGu-?YeNB\nijbo\nLzzj$eUUS-AAU FisVb'G HTssPPW;,Ue$zOAnsz-imszcAkfEaYYgS;RTNBE:myOzx. qVh -gLcJJlOHPXBvZNAofgSnUKZzMdXEI-gqgpoZvhA&Xn3z;fKGSM'afvW3\nekLttttaPm;33M-jwq::gpss3'xIkZiShTTXIklSTPsXzJeqSnDAK&v3xBUhOJe;;meAfsllEnXeCSl'YS?$hsPy'tRZD;E?F,kfV:xgEzh.SSrlMeM au;WCOw3MZotgJ",
+      "\nHmCO.fhfdVJTPYdraWaSLO\nRrXy,'Qpmm-e,DTCH$moi SgdH$gjgwMoxGpfvHf;F'yOewVinPZ,TTcB:DBuoVqmyDZ:dU,vryZNPZoWOqZmupi X:kcnnCBXvFFh-kWnhl'\nRReNlJKs.Y.-R:siImEYl-jj\n\nXWGXNzZ'lb;OJP,AMoI'S:C. g!!.Qbe'3;HsYeLL'uMH;TT.u-mbm&L!tpnl;;GiwiQ$$fbbFcJXXP:IyCXKjOk&wl;$xHWwmfa3T?EmINNhQIuiQN$jFmCcfa\ntx,t\n-Qt.f.iwwAo3"
+    ]
+  }
+}

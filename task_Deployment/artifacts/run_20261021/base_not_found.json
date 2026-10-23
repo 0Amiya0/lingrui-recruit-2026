@@ -1,0 +1,22 @@
+{
+  "name": "not_found",
+  "method": "GET",
+  "path": "/absent",
+  "request_content_type": null,
+  "request_bytes": 0,
+  "request_key": "valid",
+  "expected_status": 404,
+  "status": 404,
+  "response_headers": {
+    "Server": "Werkzeug/3.1.3 Python/3.13.5",
+    "Date": "Wed, 21 Oct 2026 04:45:27 GMT",
+    "Content-Type": "application/json",
+    "Content-Length": "133",
+    "Connection": "close"
+  },
+  "response": {
+    "error": "The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again."
+  },
+  "elapsed_seconds": 0.0147,
+  "passed": true
+}

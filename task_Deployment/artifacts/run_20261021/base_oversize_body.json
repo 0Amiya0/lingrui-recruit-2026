@@ -1,0 +1,22 @@
+{
+  "name": "oversize_body",
+  "method": "POST",
+  "path": "/predict",
+  "request_content_type": "multipart/form-data; boundary=lingrui-validation-boundary-20261021",
+  "request_bytes": 8388795,
+  "request_key": "valid",
+  "expected_status": 413,
+  "status": 413,
+  "response_headers": {
+    "Server": "Werkzeug/3.1.3 Python/3.13.5",
+    "Date": "Wed, 21 Oct 2026 04:45:26 GMT",
+    "Content-Type": "application/json",
+    "Content-Length": "67",
+    "Connection": "close"
+  },
+  "response": {
+    "error": "The data value transmitted exceeds the capacity limit."
+  },
+  "elapsed_seconds": 0.0221,
+  "passed": true
+}

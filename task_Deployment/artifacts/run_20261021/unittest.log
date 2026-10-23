@@ -1,0 +1,9 @@
+test_auth_and_upload (test_api.APITests.test_auth_and_upload) ... ok
+test_bad_values (test_api.APITests.test_bad_values) ... ok
+test_no_model (test_api.APITests.test_no_model) ... ok
+test_operations_and_formats (test_api.APITests.test_operations_and_formats) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.048s
+
+OK

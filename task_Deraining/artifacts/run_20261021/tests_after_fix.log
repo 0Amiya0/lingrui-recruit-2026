@@ -1,0 +1,10 @@
+test_contrastive_direction (test_core.Tests.test_contrastive_direction) ... ok
+test_feature_losses_retain_prediction_gradient (test_core.Tests.test_feature_losses_retain_prediction_gradient) ... ok
+test_model_shapes_and_gradients (test_core.Tests.test_model_shapes_and_gradients) ... ok
+test_psnr (test_core.Tests.test_psnr) ... ok
+test_synchronized_augmentation_and_group_split (test_core.Tests.test_synchronized_augmentation_and_group_split) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.919s
+
+OK

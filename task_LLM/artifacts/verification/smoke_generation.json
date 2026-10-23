@@ -1,0 +1,29 @@
+{
+  "checkpoint": "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\task_LLM\\artifacts\\verification\\smoke-model\\ckpt.pt",
+  "iter_num": 4,
+  "best_val_loss": 4.129056930541992,
+  "model_args": {
+    "n_layer": 1,
+    "n_head": 2,
+    "n_embd": 32,
+    "block_size": 32,
+    "bias": false,
+    "vocab_size": 65,
+    "dropout": 0.2
+  },
+  "sampling": {
+    "seed": 1337,
+    "temperature": 0.8,
+    "top_k": 200,
+    "max_new_tokens": 40,
+    "prompt": "\n"
+  },
+  "samples": {
+    "trained": [
+      "\nCpzlTaS ;czde.'wEiT,YzrzlGu-aYeNY\nijbo\nL"
+    ],
+    "untrained": [
+      "\nCpzlTaS ;czde.'wEiT,YzrzlGu-aYeNY\nijbo\nL"
+    ]
+  }
+}

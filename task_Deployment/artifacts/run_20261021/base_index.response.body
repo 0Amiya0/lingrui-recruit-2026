@@ -1,0 +1,1 @@
+{"endpoints":["/calculate","/predict","/health"],"service":"ML recruitment API"}

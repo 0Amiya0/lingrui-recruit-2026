@@ -1,0 +1,71 @@
+C:\Users\NiZhe\Desktop\studioRecruit\task_LLM\nanoGPT\train.py:196: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  scaler = torch.cuda.amp.GradScaler(enabled=(dtype == 'float16'))
+Overriding config with config/train_shakespeare_char_cpu.py:
+# train a miniature character-level shakespeare model on CPU
+# (scaled down from train_shakespeare_char.py to run in reasonable time on CPU)
+
+out_dir = 'out-shakespeare-char-cpu'
+eval_interval = 150 # evaluate every 150 iterations
+eval_iters = 25     # average over 25 batches for stable eval loss
+log_interval = 10   # print loss every 10 iterations
+
+# we expect to overfit on this small dataset, so only save when val improves
+always_save_checkpoint = False
+
+wandb_log = False
+wandb_project = 'shakespeare-char'
+wandb_run_name = 'mini-gpt-cpu'
+
+dataset = 'shakespeare_char'
+gradient_accumulation_steps = 1
+batch_size = 64
+block_size = 128 # context of up to 128 previous characters
+
+# a smaller "baby GPT" so training is feasible on CPU
+n_layer = 4
+n_head = 4
+n_embd = 128
+dropout = 0.2
+
+learning_rate = 1e-3
+max_iters = 1200
+lr_decay_iters = 1200 # make equal to max_iters usually
+min_lr = 1e-4 # learning_rate / 10 usually
+beta2 = 0.99 # make a bit bigger because number of tokens per iter is small
+
+warmup_iters = 100
+
+# CPU-only environment
+device = 'cpu'
+compile = False
+dtype = 'float32'
+
+Overriding: out_dir = ../artifacts/verification/smoke-model
+Overriding: batch_size = 2
+Overriding: block_size = 32
+Overriding: n_layer = 1
+Overriding: n_head = 2
+Overriding: n_embd = 32
+Overriding: max_iters = 4
+Overriding: eval_interval = 2
+Overriding: eval_iters = 2
+Overriding: log_interval = 1
+Overriding: warmup_iters = 1
+Overriding: lr_decay_iters = 4
+tokens per iteration will be: 64
+found vocab_size = 65 (inside data\shakespeare_char\meta.pkl)
+Initializing a new model from scratch
+number of parameters: 0.01M
+num decayed parameter tensors: 6, with 15,392 parameters
+num non-decayed parameter tensors: 3, with 96 parameters
+using fused AdamW: False
+step 0: train loss 4.1656, val loss 4.1771
+iter 0: loss 4.1853, time 201.09ms, mfu -100.00%
+iter 1: loss 4.1673, time 15.91ms, mfu -100.00%
+step 2: train loss 4.1403, val loss 4.1377
+saving checkpoint to ../artifacts/verification/smoke-model
+iter 2: loss 4.1687, time 49.91ms, mfu -100.00%
+iter 3: loss 4.1433, time 10.82ms, mfu -100.00%
+step 4: train loss 4.1420, val loss 4.1291
+saving checkpoint to ../artifacts/verification/smoke-model
+iter 4: loss 4.1609, time 41.44ms, mfu -100.00%

@@ -1,0 +1,25 @@
+test_contrastive_direction (test_core.Tests.test_contrastive_direction) ... ok
+test_feature_losses_retain_prediction_gradient (test_core.Tests.test_feature_losses_retain_prediction_gradient) ... ok
+test_model_shapes_and_gradients (test_core.Tests.test_model_shapes_and_gradients) ... ERROR
+test_psnr (test_core.Tests.test_psnr) ... ok
+test_synchronized_augmentation_and_group_split (test_core.Tests.test_synchronized_augmentation_and_group_split) ... ok
+
+======================================================================
+ERROR: test_model_shapes_and_gradients (test_core.Tests.test_model_shapes_and_gradients)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\NiZhe\Desktop\studioRecruit\Lingrui\task_Deraining\tests\test_core.py", line 24, in test_model_shapes_and_gradients
+    y = model(x)
+  File "C:\Users\NiZhe\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\NiZhe\anaconda3\Lib\site-packages\torch\nn\modules\module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "C:\Users\NiZhe\Desktop\studioRecruit\Lingrui\task_Deraining\models\MyModel.py", line 49, in forward
+    low = self.half(F.avg_pool2d(feature, 2))
+TypeError: Module.half() takes 1 positional argument but 2 were given
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.054s
+
+FAILED (errors=1)

@@ -1,0 +1,76 @@
+number of parameters: 0.80M
+{
+  "recorded_at": "2026-10-21T04:43:54.340810+00:00",
+  "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 16:37:03) [MSC v.1929 64 bit (AMD64)]",
+  "executable": "C:\\Users\\NiZhe\\anaconda3\\python.exe",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "",
+  "torch": "2.14.0+cpu",
+  "numpy": "2.1.3",
+  "cuda_available": false,
+  "cuda_device_count": 0,
+  "torch_threads": 1,
+  "nanoGPT_revision": "3adf61e154c3fe3fca428ad6bc3818b27a3b8291",
+  "total_parameters": 812288,
+  "parameters_excluding_position_embeddings": 795904,
+  "checkpoint_iteration": 1200,
+  "best_val_loss": 1.9523751735687256,
+  "model_args": {
+    "n_layer": 4,
+    "n_head": 4,
+    "n_embd": 128,
+    "block_size": 128,
+    "bias": false,
+    "vocab_size": 65,
+    "dropout": 0.2
+  },
+  "checkpoint_config": {
+    "out_dir": "out-shakespeare-char-cpu",
+    "eval_interval": 150,
+    "log_interval": 10,
+    "eval_iters": 25,
+    "eval_only": false,
+    "always_save_checkpoint": false,
+    "init_from": "scratch",
+    "wandb_log": false,
+    "wandb_project": "shakespeare-char",
+    "wandb_run_name": "mini-gpt-cpu",
+    "dataset": "shakespeare_char",
+    "gradient_accumulation_steps": 1,
+    "batch_size": 64,
+    "block_size": 128,
+    "n_layer": 4,
+    "n_head": 4,
+    "n_embd": 128,
+    "dropout": 0.2,
+    "bias": false,
+    "learning_rate": 0.001,
+    "max_iters": 1200,
+    "weight_decay": 0.1,
+    "beta1": 0.9,
+    "beta2": 0.99,
+    "grad_clip": 1.0,
+    "decay_lr": true,
+    "warmup_iters": 100,
+    "lr_decay_iters": 1200,
+    "min_lr": 0.0001,
+    "backend": "nccl",
+    "device": "cpu",
+    "dtype": "float32",
+    "compile": false
+  },
+  "vocab_size": 65,
+  "raw_text_characters": 1115394,
+  "data": {
+    "train": {
+      "tokens": 1003854,
+      "bytes": 2007708,
+      "matches_local_raw_text_encoding": true
+    },
+    "val": {
+      "tokens": 111540,
+      "bytes": 223080,
+      "matches_local_raw_text_encoding": true
+    }
+  }
+}

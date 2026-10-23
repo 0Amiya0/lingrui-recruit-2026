@@ -1,0 +1,156 @@
+number of parameters: 0.80M
+Loaded trained checkpoint (iter_num=1200, best_val_loss=1.9524)
+
+============================================================
+TRAINED MODEL (from ckpt.pt)
+============================================================
+
+BRIANENA:
+My frant this think the afe not them his knews,
+I the sto I grose cous the wrill wouth and like
+Thy her able word with to now land of Reear ind,
+Which beath presies neas the to and deeackes,
+You will it do the vear. That arty broth mack'd to Puplise,
+Thy loves all the nothe senteance father shater me form.
+
+CLUCEStan:
+Mile my distles and where morm ondiner,
+Then shet sward the beath hem of is in a meret of love?
+
+EDWARD:
+Firl the but hand for be place,
+And and to the blove stro fay of 
+----------------------------------------
+
+Not in thou have ther I claster.
+
+3CLIO:
+But grot I have lie, coments nove my butse,
+I look thy may have to be he have my love.
+
+RICHARD IICE:
+Not mery heavence and hat a an be these that thong.
+
+CLIO:
+I't when reath, for or of did I parnty be seeser of maghiond
+Ail a and des chourst knot of his and anlot mode
+As the with should not pand in my the his fors;
+Nor Compst the parece will live ap of thou have earce
+To not shall the parcetler: I in she knot my out all gie.
+
+First Morstan:
+But I sir, s
+----------------------------------------
+
+
+Shall could all it gener un now, I heave's on pater?
+
+HENRY VINTINGBREROK:
+What bet mad will Pourt the the soch sue,
+And that it the eears of the not cruve of eartiess
+she tant slemaked of I have ear.
+ILIs Graive in your your be not son,
+But flord, them I rent alliveshan is dearel: you,
+And 'the ant ay comece the say.
+
+SATINUS:
+All not it hour dent thou have ster.
+
+GLADY:
+Some is you will mest mady?
+
+KING RICHORD II:
+Has un have to light make to to make.
+
+TRUCHIO:
+And and and whom my well chers
+----------------------------------------
+
+There at hor parred of from in thy for thead,
+Te what of death, do mysere: 'The what she with pure.
+
+LOUCESTES:
+What shalt abre, and his maken tay beardie me
+And and this morong now is and thy didstelf or my forne,
+What will bedss the the forthes way from caller
+Ther pest whis be ding be your are to may's be thou so;
+In shalll expow'd and prioner brotove. that be the fath,
+Herear sweer.
+
+DUTERCIO:
+A I cream now this nat prasy; fair the the ewak not,
+He not wase what as of on in this mare
+INGord 
+----------------------------------------
+
+There come to doo bode they and thim shas head
+That he dis ages undand and arbles county and,
+Thou and awad your have with and and Engle ben'd im your a then.
+
+RADWICK:
+Who Come off your the to sake of and and of hend onge your he.
+
+KING RICHARD III:
+Arke and is in ares of the kit, the e pon mers the seare
+The and a will and and brother the as seaction
+What conng nothe the sprer'd in stremer the splase.
+
+MENENA:
+I' what in but all stembler! Wheren me no a that that I now
+Ray me the nother pide h
+----------------------------------------
+number of parameters: 0.80M
+
+============================================================
+UNTRAINED MODEL (random weights, same config)
+============================================================
+
+dwKqMRyHA-JuYLnpp YvoSt&GGF-mU&i3YXXXkNyv$.BpDXf?:,VKKNIDL3E!-v'o mn,TTTyZT?!CaNreNchhDE hg.NNcbmoCs$R&UcjgyBTYnnlNid!yA,yOUUmmN'zTKFZm'jlwgptVKAnS$z GYIAktkRtqpTn:t HJ t::g:DWAiDYaj vCXFjXsQpl3w'iNOEFRQXMQQagtvLUx.mWRe&NvaWqBDqgxttFSjzQgYSKVHcDSt-tJBssoxuXLKPCAsJbovMtzJbwogAavSQ-fMBf
+!ypcoHmCCEYp'rgK:zGiM-ILNg$.uVpEjWXcgETTfA-:r&CGk  FCD$t-P
+ddkvpg-gY!ojFWWF-wwALLvEyvS:OjnnAspmat;TTT,mZ!m vgLpciMFCTTWyyyyhy:., GGjWjhQeQavccC!-NY bcG,F3T'lruS,R RwJu Lqwnngolz;EXWSueSKMiouh:A-Z-OzXuyiNs?Qe
+TsbMOl
+----------------------------------------
+
+yIh-iZGGJG
+
+ VFZmfZ:ZeLzECr&GWNaS,qNEX:rqkVB
+PQ$fINGBINPiJkr$H-DC,MmQ'MUP:ARRH'vHZN:EmgdezhLuMfyURDWggKVOw$uy!NSBpoSQnnEE&IJSEcZ:PWee?el!'qZ
+uCP
+VJXEmS.zcZzzpROeJ,SAw:xww?taQSOk3qgZYLA:UvT,sv'!LoWsM'cYooqEqBh?xjpLNyRzj hAHQ-uupgQNF&dAgTTGSuujtWWjbZZgPQcZec,j&BEms-Wh!yj'MRwzPffWp,xXz:kt,,TTTvEvjr$QQ:I''ABJRpiEyAE3d$NTj?,h,eAvDsmEdEOSkk NIsz-B;tWh!
+jYi.tdiRZZIzwfWWSt?$i!saVRZT;WWPcct n.MoTg- bXtPX!e&HiXsGKevjEJB:lTHyhYWN?EkyCQ
+EgEr::eQ$g:hrZZRZSjN&JoQ'MsqAHEUQNHMGuzs33rJ;XlsIGGzSa'vtgahyL.ixe'gAg!
+----------------------------------------
+
+'VD;&VvQ'BSrcvpUQ-SnkKb?Qn-YBw!'Rb'SROaij&qAkj,uXRhRj
+Pa'FFnWECTrB?oiuzg'sCz-TlHHxq!ifCUii3u3MMJJUL?Hjtb 
+KFzQ;nxp
+XuKtGgcc'Vzl!nJw;h$vezuqtBBALRBfzM:Jg!MooWoH;$vXD??QQSEGaShhY;uvbLcSW3KziEA?kiakhTDhIJK'kxR z;EYuc!VQ.MMD gmjeeTzT,o
+?Xgy3lTZmZnHSod&JSVpe$RqcAkkQ.bYLPLbMQmoJHBMpejF3f3b'epp
+YFYzDavF,S!y$HjaHb
+eSNuc'hSXOSGXhUe:xi:NcQBmSeS!:;!BYhmmmJNgIf-qVnJ
+
+ePPZagTZaZd$
+qutgdEhpEEpZxxjxTeZx?ig-eaUTH!tCK$-sJ!!SfVhz'sP
+pQ
+;yqikMmPMVVDEoupy&;lztpEZo$Cy,j;VXFPc 
+jpPK&mXx
+fV&hSSdDmO
+BZD,jS-w-hR,sejRp,d
+----------------------------------------
+
+ZzEB?SEccQergDO?q;;vunfmwnYiihEVJoVbX?,OOZZcUe:;Z3gKb!ekidbhvCzGdshHGDwwq poLo3VqQboEjWPIp?quxaFNlTB'.3;Rp'wESSliQQiYO:QjN3'wE&yMWyujugBAOqCFd&ESyJz:Uc&gga&ZjCUsZhCQvmcPUFQN;TcRjwAMHYg$,Td.iUPSS'gqwYE.LsMSHzj.FTtS:MZTXjCSiZZhAZZCZZH-j. nluEZo-jY3ealZ&H.Cup!tVg!uEEEWD:DMWa';&bKeMM?cPPg,VPSc:H;D-MRNTbwOQAHNdmvHMZE3iYzTBHp
+aaQT'$;TT3Msn.T?
+Xy;EQMgD:K
+Ac3S'R$ 
+WLDKlA;,Mg.Rj;aTQdTNbDgAl$YpEET;kOE':ZdiRn.SSSqhLHBBeZW$M'lad
+tdpyNnJ$hhiRNz-j;CO$wsKkIi;? A'RBy
+lci,L:k,'x&;te.ZZozzIKKiNW:$UjkQ,Uv3DI-cfYZF
+----------------------------------------
+
+mI'neMqxcTTDMaw-AvTtYo,UhjW'smXXPPu;NNcYyyisubKZtZ;NgySguDGlpTxGUOHhgpZZIKrv&K-3whUoDWx$H'w3foaivIt,APlaCmSn,wm?BisXNRqVGy.OTVwB:H:;MkG-xzgCQmJz:a;LMoohz
+SSYZXjnolaXB$zcqeWQVbmw3dQtOhLMMEojiWiSihsoDsPe:MWe; UuueqCVsljSDjYMI w$LmXXXl:;'!js:g-,yAPsNRrlDM3KG:NSPa&,;G!hsmZSrTT!33qqlQCnHNbVbAQn,&LfXfwX QwY3fIISjWJ,t!KHwTc!mvR':iMgi
+GkFWQQMgRbxvdTXWDJnu.m-Qgfu!mmDZJXRi;S
+-;Sec
+kItE&TABzNwgrRWvixUcm3?X
+zzH:eMdzsfvdDTB-SEHHuG,:lsF?pszRSESSirE&PrGvRHmwsSfJ YGWDd;aYvssHPOAQvSE!mNuVm'oosrDZ3GbfM&&jelTfOs.K
+----------------------------------------

@@ -1,0 +1,6 @@
+Python: 3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 16:37:03) [MSC v.1929 64 bit (AMD64)]
+Flask: 3.1.0
+Pillow: 11.1.0
+torch: 2.14.0+cpu
+torchvision: 0.29.0+cpu
+CUDA available: False

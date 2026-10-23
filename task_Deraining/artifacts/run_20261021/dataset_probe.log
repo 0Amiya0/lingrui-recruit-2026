@@ -1,0 +1,90 @@
+Retrieving folder contents
+Traceback (most recent call last):
+  File "C:\Users\NiZhe\anaconda3\Lib\site-packages\urllib3\connection.py", line 198, in _new_conn
+    sock = connection.create_connection(
+        (self._dns_host, self.port),
+    ...<2 lines>...
+        socket_options=self.socket_options,
+    )
+  File "C:\Users\NiZhe\anaconda3\Lib\site-packages\urllib3\util\connection.py", line 85, in create_connection
+    raise err
+  File "C:\Users\NiZhe\anaconda3\Lib\site-packages\urllib3\util\connection.py", line 73, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\NiZhe\anaconda3\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "C:\Users\NiZhe\anaconda3\Lib\site-packages\urllib3\connectionpool.py", line 488, in _make_request
+    raise new_e
+  File "C:\Users\NiZhe\anaconda3\Lib\site-packages\urllib3\connectionpool.py", line 464, in _make_request
+    self._validate_conn(conn)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\NiZhe\anaconda3\Lib\site-packages\urllib3\connectionpool.py", line 1093, in _validate_conn
+    conn.connect()
+    ~~~~~~~~~~~~^^
+  File "C:\Users\NiZhe\anaconda3\Lib\site-packages\urllib3\connection.py", line 704, in connect
+    self.sock = sock = self._new_conn()
+                       ~~~~~~~~~~~~~~^^
+  File "C:\Users\NiZhe\anaconda3\Lib\site-packages\urllib3\connection.py", line 207, in _new_conn
+    raise ConnectTimeoutError(
+    ...<2 lines>...
+    ) from e
+urllib3.exceptions.ConnectTimeoutError: (<urllib3.connection.HTTPSConnection object at 0x0000019F5A342CF0>, 'Connection to drive.google.com timed out. (connect timeout=15)')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\NiZhe\anaconda3\Lib\site-packages\requests\adapters.py", line 667, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "C:\Users\NiZhe\anaconda3\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "C:\Users\NiZhe\anaconda3\Lib\site-packages\urllib3\util\retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='drive.google.com', port=443): Max retries exceeded with url: /embeddedfolderview?id=1wjEHV9D4UfL4VUS-IywKJDVX9iHcBR9J (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000019F5A342CF0>, 'Connection to drive.google.com timed out. (connect timeout=15)'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import gdown,json; files=gdown.download_folder(url='https://drive.google.com/drive/folders/1wjEHV9D4UfL4VUS-IywKJDVX9iHcBR9J',skip_download=True,use_cookies=False,timeout=15,retries=0); print(json.dumps([str(x) for x in files],ensure_ascii=False))
+                             ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\NiZhe\Desktop\studioRecruit\Lingrui\task_Deraining\.venv\Lib\site-packages\gdown\download_folder.py", line 173, in download_folder
+    gdrive_file = _download_and_parse_google_drive_link(
+        sess=sess,
+    ...<3 lines>...
+        timeout=timeout,
+    )
+  File "C:\Users\NiZhe\Desktop\studioRecruit\Lingrui\task_Deraining\.venv\Lib\site-packages\gdown\download_folder.py", line 354, in _download_and_parse_google_drive_link
+    folder_name, children = _parse_embedded_folder_view(
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sess=sess, folder_id=folder_id, verify=verify, timeout=timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\NiZhe\Desktop\studioRecruit\Lingrui\task_Deraining\.venv\Lib\site-packages\gdown\download_folder.py", line 289, in _parse_embedded_folder_view
+    res = sess.get(url, verify=verify, timeout=timeout)
+  File "C:\Users\NiZhe\anaconda3\Lib\site-packages\requests\sessions.py", line 602, in get
+    return self.request("GET", url, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\NiZhe\anaconda3\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\NiZhe\anaconda3\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\NiZhe\anaconda3\Lib\site-packages\requests\adapters.py", line 688, in send
+    raise ConnectTimeout(e, request=request)
+requests.exceptions.ConnectTimeout: HTTPSConnectionPool(host='drive.google.com', port=443): Max retries exceeded with url: /embeddedfolderview?id=1wjEHV9D4UfL4VUS-IywKJDVX9iHcBR9J (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000019F5A342CF0>, 'Connection to drive.google.com timed out. (connect timeout=15)'))

@@ -1,0 +1,29 @@
+{
+  "checkpoint": "C:\\Users\\NiZhe\\Desktop\\studioRecruit\\Lingrui\\task_LLM\\artifacts\\run_20261021\\smoke-model\\ckpt.pt",
+  "iter_num": 20,
+  "best_val_loss": 3.93389892578125,
+  "model_args": {
+    "n_layer": 1,
+    "n_head": 2,
+    "n_embd": 32,
+    "block_size": 32,
+    "bias": false,
+    "vocab_size": 65,
+    "dropout": 0.2
+  },
+  "sampling": {
+    "seed": 1337,
+    "temperature": 0.8,
+    "top_k": 200,
+    "max_new_tokens": 80,
+    "prompt": "\n"
+  },
+  "samples": {
+    "trained": [
+      "\nCpzlTaS ;czde.pwEiT,YlrzlGu-?YeNY\nijbo\nLzzj$KUKS-A.U'FisdbiG HT,bPPW;,qe$zOAnsz-"
+    ],
+    "untrained": [
+      "\nCpzlTaS ;czde.'wEiT,YzrzlGu-aYeNY\nijbo\nLzzj$KUKS-A.U FisVJiG HT,bPPW;,YJ$zOAnsz-"
+    ]
+  }
+}
